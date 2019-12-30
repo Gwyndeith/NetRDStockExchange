@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>User Home Page</title>
+
+        <link rel="stylesheet" type="text/css" href="css/userHome.css">
+    </head>
+    <body onload="loadSelectOptions()">
+        <div class="container">
+            <label class="title" id="welcomeTitle">Welcome to User Home Page!</label>
+        </div>
+        <div class="container" id="userStocksTableDiv">
+            <table id="userOwnedStocksEmptyTable">
+                <tr>
+                    <th>Stock ID</th>
+                    <th>Stock Name</th>
+                    <th>Stock Code</th>
+                    <th>Amount Owned</th>
+                </tr>
+            </table>
+        </div>
+        <script type="text/javascript">
+            var arrHead = new Array();
+            arrHead = ["Stock ID", "Stock Code", "Stock Name", "Amount Owned"];
+            var allStocksOwned = "";
+            var cookies = document.cookie.split(";");
+            var cookie = cookies[0];
+
+            for (var i = 0; i < cookies.length; i++) {
+                var curCookie = cookies[i].substr(0, cookies[i].indexOf("=")).trim();
+                if (curCookie.localeCompare("username") == 0) {
+                    cookie = cookies[i].substr(cookies[i].indexOf("=") + 1, cookies[i].length);
+                }
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/ownedStocksServlet", false);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({
+                "username": cookie
+            }));
+
+            cookies = document.cookie.split(";");
+            cookie = cookies[0];
+
+            for (var i = 0; i < cookies.length; i++) {
+                var curCookie = cookies[i].substr(0, cookies[i].indexOf("=")).trim();
+                console.log(curCookie);
+                if (curCookie.localeCompare("allOwnedStocks") == 0) {
+                    cookie = cookies[i].substr(cookies[i].indexOf("=") + 1, cookies[i].length);
+                }
+            }
+            console.log("ownedStocksCookie: " + cookie);
+
+            allStocksOwned = cookie;
+            var ownedStocksCount = 0;
+            ownedStocksCount = ((allStocksOwned.match(new RegExp('_', 'g')) || []).length);
+            for (var i = 0; i < ownedStocksCount; i++) {
+                addOwnedStockRow()
+            }
+
+            function addOwnedStockRow() {
+                var empTab = document.getElementById("userOwnedStocksEmptyTable");
+
+                var rowCnt = empTab.rows.length;
+                var tr = empTab.insertRow(rowCnt);
+
+                var i = 0;
+                for (var c = 0; c < arrHead.length; c++) {
+                    var td = document.createElement("td");
+                    td = tr.insertCell(c);
+
+                    if (i == 0) {
+                        var ele = document.createElement("input");
+                        ele.setAttribute("type","text");
+                        ele.setAttribute("value", allStocksOwned.substr(allStocksOwned.indexOf('=') + 1, allStocksOwned.indexOf('-') - allStocksOwned.indexOf('=') - 1)); //ID
+                        console.log("stock ID owned: " + allStocksOwned.substr(allStocksOwned.indexOf('=') + 1, allStocksOwned.indexOf('-') - allStocksOwned.indexOf('=') - 1));
+                        allStocksOwned = allStocksOwned.substr(allStocksOwned.indexOf('-')+1, allStocksOwned.length - allStocksOwned.indexOf('-')-1);
+                        td.appendChild(ele);
+                    } else if (i == 1) {
+                        var ele = document.createElement("input");
+                        ele.setAttribute("type","text");
+                        var stockName = allStocksOwned.substr(allStocksOwned.indexOf('=') + 1, allStocksOwned.indexOf('-') - allStocksOwned.indexOf('=') - 1);
+                        stockName = stockName.substr(stockName.indexOf("'")+1, stockName.length - stockName.indexOf("'") - 1);
+                        ele.setAttribute("value", stockName); // Stock Name
+                        console.log("stock Name owned: " + stockName);
+                        allStocksOwned = allStocksOwned.substr(allStocksOwned.indexOf('-')+1, allStocksOwned.length - allStocksOwned.indexOf('-')-1);
+                        td.appendChild(ele);
+                    } else if (i == 2) {
+                        var ele = document.createElement("input");
+                        ele.setAttribute("type","text");
+                        var stockCode = allStocksOwned.substr(allStocksOwned.indexOf('=')+1, allStocksOwned.indexOf('-') - allStocksOwned.indexOf('=')-1);  //Stock Code
+                        ele.setAttribute("value", stockCode); //Instead of admin insert the details of Users
+                        console.log("stock Code owned: " + stockCode);
+                        allStocksOwned = allStocksOwned.substr(allStocksOwned.indexOf('-')+1, allStocksOwned.length - allStocksOwned.indexOf('-')-1);
+                        td.appendChild(ele);
+                    } else if (i == 3) {
+                        var ele = document.createElement("input");
+                        ele.setAttribute("type","text");
+                        ele.setAttribute("value", allStocksOwned.substr(allStocksOwned.indexOf('=')+1, allStocksOwned.indexOf('}') - allStocksOwned.indexOf('=')-1)); //Owned Stock Amount
+                        console.log("stock amount owned: " + allStocksOwned.substr(allStocksOwned.indexOf('=')+1, allStocksOwned.indexOf('}') - allStocksOwned.indexOf('=')-1));
+                        allStocksOwned = allStocksOwned.substr(allStocksOwned.indexOf("_")+1, allStocksOwned.length - allStocksOwned.indexOf("_")-1);
+                        td.appendChild(ele);
+                    }
+                    i++;
+                }
+            }
+        </script>
+
+        <div id="purchaseStockDiv" class="container">
+            <form id="purchaseStock" action="" method="post" onsubmit="redirectBackToUserHome()">
+<!--                <h1>Available Stocks</h1>-->
+                <label for="stockSelect"><b>Available Stocks</b></label>
+                <select id="stockSelect" name="stockName">
+
+                </select>
+                <br>
+                <label for="stockAmount"><b>Stock Amount to Purchase:</b></label>
+                <input type="number" id="stockAmount" name="stockAmount">
+                <br>
+                <input type="submit" id="stockPurchaseSubmit" onclick="addUsernameToActionPurchase()" value="Purchase Stock">
+                <input type="submit" id="stockSellSubmit" onclick="addUsernameToActionSell()" value="Sell Stock">
+            </form>
+        </div>
+        <div class="container">
+            <button type="logout" id="logoutButton" onclick=location.replace("/")>Log Out</button>
+        </div>
+    </body>
+    <script>
+
+        function renameTitle() {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                if ((cookies[i].substr(0, cookies[i].indexOf('='))).trim().localeCompare("username") == 0) {
+                    var username = cookies[i].substr(cookies[i].lastIndexOf('=') + 1, cookies[i].length);
+                }
+            }
+            sessionStorage.setItem("username", username);
+            document.getElementById("welcomeTitle").innerHTML = "Welcome to your Admin Home Page, " + username + "!";
+        }
+
+        function addUsernameToActionPurchase() {
+            var cookies = document.cookie.split(";");
+            var cookie = cookies[0];
+            for (var i = 0; i < cookies.length; i++) {
+                var curCookie = cookies[i].substr(0, cookies[i].indexOf("=")).trim();
+                if (curCookie.localeCompare("username") == 0) {
+                    cookie = cookies[i].substr(cookies[i].indexOf("=") + 1, cookies[i].length);
+                }
+            }
+            var select = document.getElementById("stockSelect");
+            var selectedStockId = select.options[select.selectedIndex].value;
+            var stockAmount = document.getElementById("stockAmount").value;
+            document.getElementById("purchaseStock").action = "/users/purchaseStock" + "?stockId=" + selectedStockId + "&stockAmount=" + stockAmount + "&username=" + cookie;
+            document.getElementById("purchaseStock").submit();
+        }
+
+        function addUsernameToActionSell() {
+            var cookies = document.cookie.split(";");
+            var cookie = cookies[0];
+            for (var i = 0; i < cookies.length; i++) {
+                var curCookie = cookies[i].substr(0, cookies[i].indexOf("=")).trim();
+                if (curCookie.localeCompare("username") == 0) {
+                    cookie = cookies[i].substr(cookies[i].indexOf("=") + 1, cookies[i].length);
+                }
+            }
+            var select = document.getElementById("stockSelect");
+            var selectedStockId = select.options[select.selectedIndex].value;
+            var stockAmount = document.getElementById("stockAmount").value;
+            document.getElementById("purchaseStock").action = "/users/sellStock" + "?stockId=" + selectedStockId + "&stockAmount=" + stockAmount + "&username=" + cookie;
+            document.getElementById("purchaseStock").submit();
+        }
+
+        function loadSelectOptions() {
+            renameTitle();
+            var arrHead = new Array();
+            var stockName = "";
+            var stockId = "";
+            arrHead = ["ID", "Stockname", "Stock Code", "Price", "Last Modified By"];
+            var allStocks = "";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/stockServlet", false);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({}));
+
+            var cookies = document.cookie.split(";");
+            var cookie = cookies[0];
+            for (var i = 0; i < cookies.length; i++) {
+                var curCookie = cookies[i].substr(0, cookies[i].indexOf("=")).trim();
+                if (curCookie.localeCompare("allStocks") == 0) {
+                    cookie = cookies[i].substr(cookies[i].indexOf("=") + 1, cookies[i].length);
+                }
+            }
+            allStocks = cookie;
+            var stockCount = 0;
+            stockCount = ((allStocks.match(new RegExp('_', 'g')) || []).length);
+            for (var i = 0; i < stockCount; i++) {
+                stockName = "";
+                addSelectOption();
+            }
+
+            function addSelectOption() {
+                var i = 0;
+                for (var c = 0; c < arrHead.length; c++) {
+                    var selectOption = "";
+                    if (i == 0) {
+                        stockId = allStocks.substr(allStocks.indexOf("=")+1, allStocks.indexOf('-') - allStocks.indexOf('=') - 1); // Stock ID
+                        allStocks = allStocks.substr(allStocks.indexOf('-')+1, allStocks.length - allStocks.indexOf('-')-1);
+                    } else if (i == 1) {
+                        stockName = allStocks.substr(allStocks.indexOf("'"), allStocks.indexOf('-') - allStocks.indexOf('=') - 1); // Stock Name
+                        stockName = stockName.substr(stockName.indexOf("'")+1, stockName.lastIndexOf("'") - stockName.indexOf("'")-1);
+                        allStocks = allStocks.substr(allStocks.indexOf('-')+1, allStocks.length - allStocks.indexOf('-')-1);
+                    } else if (i == 2) {
+                        var stockCode = allStocks.substr(allStocks.indexOf("'"), allStocks.indexOf('-') - allStocks.indexOf('=')-1); // Stock Code
+                        stockCode = stockCode.substr(stockCode.indexOf("'")+1, stockCode.lastIndexOf("'") - stockCode.indexOf("'")-1);
+                        selectOption = stockId + " - " + stockCode + " - " + stockName;
+                        var option = document.createElement("option");
+                        option.setAttribute("label", selectOption);
+                        option.setAttribute("value", stockId);
+                        document.getElementById("stockSelect").appendChild(option);
+                        allStocks = allStocks.substr(allStocks.indexOf('-')+1, allStocks.length - allStocks.indexOf('-')-1);
+                    } else if (i == 3) {
+                        allStocks = allStocks.substr(allStocks.indexOf('_')+1, allStocks.length - allStocks.indexOf('_')-1);
+                    } else if (i == 4) {
+
+                    }
+                    i++;
+                }
+            }
+            document.getElementById("stockSelect")
+        }
+
+        function redirectBackToUserHome() {
+            location.replace("/userHome.html");
+        }
+    </script>
+</html>

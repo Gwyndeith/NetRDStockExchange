@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>NetRD Stock Exchange System</title>
+
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+    </head>
+    <body>
+        <div class="label title">
+            <label>Welcome to the NetRD Stock Exchange System!</label>
+        </div>
+        <br>
+        <div class="label subTitle">
+            <label>Please login to the system with your credentials.</label>
+        </div>
+        <br>
+        <form action="/loginServlet" method="post">
+            <!--
+                <div class="imgcontainer">
+                    <img src="img_avatar2.png" alt="Avatar" class="avatar">
+                </div>
+            -->
+            <div class="container">
+                <label for="usernameInput"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="username" id="usernameInput" required>
+
+                <label for="passwordInput"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="pwd" id="passwordInput" required>
+
+                <input class="submit" type="submit" id="loginButton" value="Login">
+                <label>
+                    <input type="checkbox" checked="checked"> Remember me
+                </label>
+            </div>
+
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" class="cancelButton" onclick=location.href='/'>Cancel</button>
+                <span class="password"><a href="#">Forgot password?</a></span>
+            </div>
+
+            <script type="text/javascript">
+                // function testParam() {
+                //     var username = document.getElementById("usernameInput").value;
+                //     document.getElementById("testForm").action = "/listTest/?username=" + username;
+                // }
+                //
+                // function checkCredentials() {
+                //     var inputUsername = document.getElementById("usernameInput").value;
+                //     var inputPassword = document.getElementById("passwordInput").value;
+                //     return "http://localhost:8080/login/?username='" + inputUsername + "'&password='" + inputPassword + "'";
+                // }
+            </script>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin - Add New User</title>
+
+        <link rel="stylesheet" type="text/css" href="css/newUserForm.css">
+    </head>
+    <body>
+        <div class="container">
+            <form action="/users/addNewUser" method="post" id="newUserForm" onsubmit="redirectBackHome()">
+                <div class="container">
+                    <label><b>New Username</b></label>
+                    <input type="text" id="newUsername" name="username">
+                    <br>
+                    <label><b>New User PW</b></label>
+                    <input type="text" id="newUserPw" name="password">
+                    <br>
+                    <label><b>New User Type</b></label>
+                    <input type="text" id="newUserType" name="userType">
+                    <br>
+                    <label><b>New User Mail Address</b></label>
+                    <input type="text" id="newUserMailAddress" name="email">
+                    <br>
+                    <input type="submit" id="newUserSubmitButton" value="Add User">
+                    <br>
+                </div>
+            </form>
+        </div>
+        <div class="container">
+            <button type="backButton" id="backButton" onclick=location.replace("/adminHome.html")>Back to Admin Home Page</button>
+        </div>
+    </body>
+    <script type="text/javascript">
+        function redirectBackHome() {
+            window.location.replace("adminHome.html");
+        }
+    </script>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin - Add New Stock</title>
+
+        <link rel="stylesheet" type="text/css" href="css/newStockForm.css">
+    </head>
+    <body>
+    <div class="container">
+        <form action="/stocks/addNewStock" method="post" id="newStockForm"  onsubmit="redirectBackHome()">
+            <div class="container">
+                <label><b>New Stock Name</b></label>
+                <input type="text" id="newStockname" name="stockName">
+                <br>
+                <label><b>New Stock Code</b></label>
+                <input type="text" id="newStockCode" name="stockCode">
+                <br>
+                <input type="submit" id="newStockSubmitButton" value="Add Stock">
+                <br>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <button type="backButton" id="backButton" onclick=location.replace("/adminHome.html")>Back to Admin Home Page</button>
+    </div>
+    </body>
+    <script type="text/javascript">
+        function redirectBackHome() {
+            console.log("redirecting back home after inserting last modified by.");
+            var cookies = document.cookie.split(";");
+            var lastModifiedBy = "";
+            for (var i = 0; i < cookies.length; i++) {
+                var curCookie = cookies[i].substr(0, cookies[i].indexOf("=")).trim();
+                console.log("curCookie: " + curCookie);
+                if (curCookie.localeCompare("username") == 0) {
+                    lastModifiedBy = cookies[i].substr(cookies[i].indexOf("=") + 1, cookies[i].length - cookies[i].indexOf("="));
+                }
+            }
+            console.log("lastModifiedBy sent: " + lastModifiedBy);
+            var inputElement = document.createElement("input");
+            inputElement.setAttribute("type", "hidden");
+            inputElement.setAttribute("name", "lastModifiedBy");
+            inputElement.setAttribute("value", lastModifiedBy);
+            document.getElementById("newStockForm").appendChild(inputElement);
+            console.log(inputElement);
+            window.location.replace("adminHome.html");
+        }
+    </script>
+</html>

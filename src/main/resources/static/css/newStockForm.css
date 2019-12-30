@@ -1,0 +1,119 @@
+/* Bordered form */
+form {
+    margin: 10px !important;
+    alignment: center;
+}
+
+.label{
+
+}
+.title{
+    margin: auto;
+    alignment: center;
+    width: 50%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 3em;
+}
+.subTitle{
+    margin: auto;
+    alignment: center;
+    width: 50%;
+    text-align: center;
+    font-size: 1.8em;
+}
+
+/* Add padding to containers */
+.container {
+    margin: auto;
+    padding: 16px;
+    width: 50%;
+    alignment: center;
+    text-align: center;
+}
+
+input[type=submit] {
+    background-color: #5e73d1;
+    color: white;
+    padding: 14px 20px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    alignment: center;
+    text-align: center;
+}
+
+/* Set a style for all buttons */
+button {
+    background-color: #5e73d1;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    alignment: left;
+}
+
+button[type=backButton] {
+    background-color: #5e73d1;
+    color: white;
+    padding: 14px 20px;
+    margin: 10px 0;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    alignment: center;
+}
+
+/* Add a hover effect for buttons */
+button:hover {
+    opacity: 0.8;
+}
+
+/* Full-width inputs */
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Extra style for the cancel button (red) */
+.cancelButton {
+    width: auto;
+    padding: 10px 18px;
+    background-color: #f44336;
+}
+
+/* Center the avatar image inside this container */
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+
+/* Avatar image */
+img.avatar {
+    width: 40%;
+    border-radius: 50%;
+}
+
+/* The "Forgot password" text */
+span.password {
+    float: right;
+    padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+    span.password {
+        display: block;
+        float: none;
+    }
+    .cancelButton {
+        width: 100%;
+    }
+}

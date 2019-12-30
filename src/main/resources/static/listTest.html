@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>List Test</title>
+    </head>
+    <body>
+    <table>
+        <thead>
+            <tr>
+                <th> ID </th>
+                <th> Username </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--/*@thymesVar id="users" type="java.util.ArrayList"*/-->
+            <!--/*@thymesVar id="user" type="com.example.NetRDStockExchange.UserEntity"*/-->
+            <tr th:each="user : ${users}">
+                <td><span th:text="${user.getId()}"> ID </span></td>
+                <td><span th:text="${user.getUsername()}"> Username </span></td>
+            </tr>
+            <tr th:if="${users.isEmpty()}">
+                <td colspan="2"> No Users Available </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="button" onclick=location.replace("/")>Back To Main</button>
+
+    </body>
+
+    <script>
+        // var list = ["Ahmet", "Ali", "Admin", "Orkun", "Tayfun"];
+        //
+        // var ul = document.querySelector("ul");
+        //
+        // for (var i = 0; i < list.length; i++) {
+        //     var item = list[i];
+        //
+        //     var listItem = document.createElement("li");
+        //     listItem.textContent = item;
+        //
+        //     ul.appendChild(listItem);
+        // }
+    </script>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin - Home Page</title>
+
+        <link rel="stylesheet" type="text/css" href="css/adminHome.css">
+    </head>
+    <body onload="renameTitle()">
+        <div class="container">
+            <label id="welcomeTitle" class="title">Welcome to your Admin Home Page!</label>
+        </div>
+        <h1>Users</h1>
+        <button type="addNewUser" id="addNewUser" onclick="addUser()">Add New User</button>
+        <div id="userTableDiv">
+            <table id="userEmptyTable">
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>User Type</th>
+                    <th>Created Date</th>
+                    <th>Last Modified Date</th>
+                </tr>
+            </table>
+        </div>
+        <script type="text/javascript">
+            var arrHead = new Array();
+            arrHead = ["ID", "Username", "Email", "Profile", "Created Date", "Last Modified Date", "", "", ""];
+            var allUsers = "";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/userServlet", false);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({}));
+
+            var cookies = document.cookie.split(";");
+            var cookie = cookies[0];
+            for (var i = 0; i < cookies.length; i++) {
+                var curCookie = cookies[i].substr(0, cookies[i].indexOf("=")).trim();
+                if (curCookie.localeCompare("allUsers") == 0) {
+                    cookie = cookies[i].substr(cookies[i].indexOf("=") + 1, cookies[i].length);
+                }
+            }
+            allUsers = cookie;
+            var userCount = 0;
+            userCount = ((allUsers.match(new RegExp('_', 'g')) || []).length);
+            for (var i = 0; i < userCount; i++) {
+                addUserRow()
+            }
+
+            function addUserRow() {
+                var empTab = document.getElementById("userEmptyTable");
+
+                var rowCnt = empTab.rows.length;
+                var tr = empTab.insertRow(rowCnt);
+
+                var i = 0;
+                for (var c = 0; c < arrHead.length; c++) {
+                    var td = document.createElement("td");
+                    td = tr.insertCell(c);
+                    var button;
+
+                    if (i == 0) {
+                        var ele = document.createElement("input");
+                        ele.setAttribute("type","text");
+                        ele.setAttribute("value", allUsers.substr(allUsers.indexOf('=') + 1, allUsers.indexOf('-') - allUsers.indexOf('=') - 1)); //ID
+                        allUsers = allUsers.substr(allUsers.indexOf('-')+1, allUsers.length - allUsers.indexOf('-')-1);
+                        td.appendChild(ele);
+                    } else if (i == 1) {
+                        var ele = document.createElement("input");
+                        ele.setAttribute("type","text");
+                        var username = allUsers.substr(allUsers.indexOf("'"), allUsers.indexOf('-') - allUsers.indexOf('=') - 1);  //Username
+                        username = username.substr(username.indexOf("'")+1, username.lastIndexOf("'") - username.indexOf("'")-1);
+                        ele.setAttribute("value", username); //Instead of admin insert the details of Users
+                        allUsers = allUsers.substr(allUsers.indexOf('-')+1, allUsers.length - allUsers.indexOf('-')-1);
+                        td.appendChild(ele);
+                    } else if (i == 2) {
+                        var ele = document.createElement("input");
+                        ele.setAttribute("type","text");
+                        var mail = allUsers.substr(allUsers.indexOf("'"), allUsers.indexOf('-') - allUsers.indexOf('=')-1);  //Email
+                        mail = mail.substr(mail.indexOf("'")+1, mail.lastIndexOf("'") - mail.indexOf("'")-1);
+                        ele.setAttribute("value", mail); //Instead of admin insert the details of Users
+                        allUsers = allUsers.substr(allUsers.indexOf('-')+1, allUsers.length - allUsers.indexOf('=')-1);
+                        td.appendChild(ele);
+                    } else if (i == 3) {
+                        var ele = document.createElement("input");
+                        ele.setAttribute("type","text");
+                        ele.setAttribute("value", allUsers.substr(allUsers.indexOf('=')+1, allUsers.indexOf('}') - allUsers.indexOf('=')-1)); //User Type
+                        allUsers = allUsers.substr(allUsers.indexOf("_")+1, allUsers.length - allUsers.indexOf("_")-1);
+                        td.appendChild(ele);
+                    } else if (i == 4) {
+
+                    } else if (i == 5) {
+
+                    } else if (i == 6) {
+                        button = document.createElement("input");
+
+                        button.setAttribute("type", "button");
+                        button.setAttribute("value", "View");
+
+                        button.setAttribute("onclick", "location.replace('/users/view/{username}')");
+
+                        td.appendChild(button);
+                    } else if (i == 7) {
+                        button = document.createElement("input");
+
+                        button.setAttribute("type", "button");
+                        button.setAttribute("value", "Edit");
+
+                        button.setAttribute("onclick", "location.replace('/users/edit/{username}')");
+
+                        td.appendChild(button);
+                    } else if (i == 8) {
+                        button = document.createElement("input");
+
+                        button.setAttribute("type", "button");
+                        button.setAttribute("value", "Delete");
+
+                        button.setAttribute("onclick", "location.replace('/users/delete/?username={username}')");
+
+                        td.appendChild(button);
+                    }
+                    i++;
+                }
+                // window.location.reload();
+            }
+        </script>
+        <h1>Stocks</h1>
+        <button type="addNewStock" id="addNewStock" onclick="addStock()">Add New Stock</button>
+        <div id="stockTableDiv">
+            <table id="stockEmptyTable">
+                <tr>
+                    <th>Stock ID</th>
+                    <th>Stock Name</th>
+                    <th>Stock Code</th>
+                    <th>Price</th>
+                    <th>Last Modified By</th>
+                </tr>
+            </table>
+        </div>
+        <script type="text/javascript">
+            var arrHead = new Array();
+            arrHead = ["ID", "Stockname", "Stock Code", "Price", "Last Modified By", "", "", ""];
+            var allStocks = "";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/stockServlet", false);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({}));
+
+            var cookies = document.cookie.split(";");
+            var cookie = cookies[0];
+            for (var i = 0; i < cookies.length; i++) {
+                var curCookie = cookies[i].substr(0, cookies[i].indexOf("=")).trim();
+                if (curCookie.localeCompare("allStocks") == 0) {
+                    cookie = cookies[i].substr(cookies[i].indexOf("=") + 1, cookies[i].length);
+                }
+            }
+            allStocks = cookie;
+            var stockCount = 0;
+            stockCount = ((allStocks.match(new RegExp('_', 'g')) || []).length);
+            for (var i = 0; i < stockCount; i++) {
+                addStockRow()
+            }
+
+            function addStockRow() {
+                var stockEmpTab = document.getElementById("stockEmptyTable");
+
+                var rowCnt = stockEmpTab.rows.length;
+                var stockTr = stockEmpTab.insertRow(rowCnt);
+
+                var i = 0;
+                for (var c = 0; c < arrHead.length; c++) {
+                    var stockTd = document.createElement("td");
+                    stockTd = stockTr.insertCell(c);
+                    var button;
+
+                    if (i == 0) {
+                        var stockEle = document.createElement("input");
+                        stockEle.setAttribute("type","text");
+                        stockEle.setAttribute("value", allStocks.substr(allStocks.indexOf('=') + 1, allStocks.indexOf('-') - allStocks.indexOf('=') - 1)); // ID
+                        allStocks = allStocks.substr(allStocks.indexOf('-')+1, allStocks.length - allStocks.indexOf('-')-1);
+                        stockTd.appendChild(stockEle);
+                    } else if (i == 1) {
+                        var stockEle = document.createElement("input");
+                        stockEle.setAttribute("type","text");
+                        var stockName = allStocks.substr(allStocks.indexOf("'"), allStocks.indexOf('-') - allStocks.indexOf('=') - 1); // Stock Name
+                        stockName = stockName.substr(stockName.indexOf("'")+1, stockName.lastIndexOf("'") - stockName.indexOf("'")-1)
+                        stockEle.setAttribute("value", stockName);
+                        allStocks = allStocks.substr(allStocks.indexOf('-')+1, allStocks.length - allStocks.indexOf('-')-1);
+                        stockTd.appendChild(stockEle);
+                    } else if (i == 2) {
+                        var stockEle = document.createElement("input");
+                        stockEle.setAttribute("type","text");
+                        var stockCode = allStocks.substr(allStocks.indexOf("'"), allStocks.indexOf('-') - allStocks.indexOf('=')-1); // Stock Code
+                        stockCode = stockCode.substr(stockCode.indexOf("'")+1, stockCode.lastIndexOf("'") - stockCode.indexOf("'")-1);
+                        stockEle.setAttribute("value", stockCode);
+                        allStocks = allStocks.substr(allStocks.indexOf('-')+1, allStocks.length - allStocks.indexOf('-')-1);
+                        stockTd.appendChild(stockEle);
+                    } else if (i == 3) {
+                        var stockEle = document.createElement("input");
+                        stockEle.setAttribute("type", "text");
+                        stockEle.setAttribute("value", allStocks.substr(allStocks.indexOf('=') + 1, allStocks.indexOf('-') - allStocks.indexOf('=') - 1)); // Price
+                        allStocks = allStocks.substr(allStocks.indexOf('-')+1, allStocks.length - allStocks.indexOf('-')-1);
+                        stockTd.appendChild(stockEle);
+                    } else if (i == 4) {
+                        var stockEle = document.createElement("input");
+                        stockEle.setAttribute("type", "text");
+                        var lastModifiedBy = allStocks.substr(allStocks.indexOf("'"), allStocks.indexOf('}') - allStocks.indexOf("'"));  // LastModifiedBy
+                        lastModifiedBy = lastModifiedBy.substr(lastModifiedBy.indexOf("'")+1, lastModifiedBy.lastIndexOf("'") - lastModifiedBy.indexOf("'")-1);
+                        stockEle.setAttribute("value",lastModifiedBy);
+                        allStocks = allStocks.substr(allStocks.indexOf('_')+1, allStocks.length - allStocks.indexOf('_')-1);
+                        stockTd.appendChild(stockEle);
+                    } else if (i == 5) {
+                        button = document.createElement("input");
+
+                        button.setAttribute("type", "button");
+                        button.setAttribute("value", "View");
+
+                        button.setAttribute("onclick", "location.replace('/stocks/view/{stockName}')");
+
+                        stockTd.appendChild(button);
+                    } else if (i == 6) {
+                        button = document.createElement("input");
+
+                        button.setAttribute("type", "button");
+                        button.setAttribute("value", "Edit");
+
+                        button.setAttribute("onclick", "location.replace('/stocks/edit/{stockName}')");
+
+                        stockTd.appendChild(button);
+                    } else if (i == 7) {
+                        button = document.createElement("input");
+
+                        button.setAttribute("type", "button");
+                        button.setAttribute("value", "Delete");
+
+                        button.setAttribute("onclick", "location.replace('/stocks/delete/?stockName={stockName}')");
+
+                        stockTd.appendChild(button);
+                    }
+                    i++;
+                }
+                // window.location.reload();
+            }
+        </script>
+        <div class="container">
+            <button type="logout" id="logoutButton" onclick=location.replace("/index.html")>Logout</button>
+        </div>
+    </body>
+
+    <script id="script2" type="text/javascript">
+        function renameTitle() {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                if ((cookies[i].substr(0, cookies[i].indexOf('='))).trim().localeCompare("username") == 0) {
+                    var username = cookies[i].substr(cookies[i].lastIndexOf('=') + 1, cookies[i].length);
+                }
+            }
+            sessionStorage.setItem("username", username);
+            document.getElementById("welcomeTitle").innerHTML = "Welcome to your Admin Home Page, " + username + "!";
+        }
+
+        // function createTable() {
+        //     var emptyTable = document.createElement('table');
+        //     emptyTable.setAttribute('id', 'emptyTable');            // SET THE TABLE ID.
+        //
+        //     var tr = emptyTable.insertRow(-1);
+        //
+        //     for (var h = 0; h < arrHead.length; h++) {
+        //         var th = document.createElement('th');          // TABLE HEADER.
+        //         th.innerHTML = arrHead[h];
+        //         tr.appendChild(th);
+        //     }
+        //
+        //     var div = document.getElementById('tableDiv');
+        //     div.appendChild(emptyTable);    // ADD THE TABLE TO YOUR WEB PAGE.
+        // }
+
+        function addUser() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/users/loadNewUserPage", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({}));
+            xhr.onload = function () {
+                // Do something with the retrieved data ( found in xmlhttp.response )
+                location.replace(this.response);  //Works perfectly fine and is generic!!!!
+
+                // xhr.onreadystatechange = function() {
+                //     if (xhr.readyState === 4) {
+                //         location.href = this.responseURL;
+                //     }
+                // }
+            };
+        }
+
+        function addStock() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/stocks/loadNewStockPage", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({}));
+            xhr.onload = function () {
+                // Do something with the retrieved data ( found in xmlhttp.response )
+                location.replace(this.response);  //Works perfectly fine and is generic!!!!
+
+                // xhr.onreadystatechange = function() {
+                //     if (xhr.readyState === 4) {
+                //         location.href = this.responseURL;
+                //     }
+                // }
+            };
+        }
+    </script>
+</html>
